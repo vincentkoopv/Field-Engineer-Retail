@@ -2,29 +2,37 @@ package com.demo.retail.fieldengineerretaildemo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.LinkedList;
 
+import retrofit.RestAdapter;
 
 public class MainActivity extends Activity {
 
-    public static final String LIST_OF_VALUES = "LIST_OF_VALUES";
+    private static final String API_URL = "http://freemusicarchive.org/api";
+    private static final String API_KEY = "-------";
+
+    public static final String OBJECT_SALE_KEY = "OBJECT_SALE_KEY";
 
     private TextView nameText;
     private TextView industryText;
     private TextView valueText;
     private TextView messageText;
+    private TextView percentText;
+
+    private TextView restResponse;
+    private Button submitRequest;
     private Button submitButton;
     private Button clearButton;
-
-    private ArrayList<Stack<String>> listOfValues = new ArrayList<Stack<String>>();
+    private LinkedList<ObjectSale> listOfObjectSales = new LinkedList<ObjectSale>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,48 +43,47 @@ public class MainActivity extends Activity {
         industryText = (TextView) findViewById(R.id.industry_text);
         valueText = (TextView) findViewById(R.id.value_text);
         messageText = (TextView) findViewById(R.id.message_text);
+        percentText = (TextView) findViewById(R.id.percent_text);
         submitButton = (Button) findViewById(R.id.submit_button);
         clearButton = (Button) findViewById(R.id.clear_button);
+        restResponse = (TextView) findViewById(R.id.rest_response);
+        submitRequest = (Button) findViewById(R.id.restful_button);
 
-        if (getIntent().hasExtra(LIST_OF_VALUES)) {
-            ListOfStringValues serializedList = (ListOfStringValues) getIntent().getExtras().get(LIST_OF_VALUES);
-            listOfValues = serializedList.getListOfValues();
+        if (getIntent().hasExtra(OBJECT_SALE_KEY)) {
+            listOfObjectSales = ((ListOfObjectSaleWrapper) getIntent().getExtras().get(OBJECT_SALE_KEY)).getListOfObjectSales();
         } else {
-            initListOfStringValues();
+            initLinkedList();
         }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int y = 1; y < 5; ++y) {
-                    Stack<String> newStack = listOfValues.get(y);
-                    String newValue;
+                ObjectSale newObjectSale = new ObjectSale();
+                for (int y = 0; y < 5; ++y) {
                     switch (y) {
+                        case 0:
+                            newObjectSale.setName(nameText.getText().toString());
+                            break;
                         case 1:
-                            newValue = nameText.getText().toString();
+                            newObjectSale.setIndustry(industryText.getText().toString());
                             break;
                         case 2:
-                            newValue = industryText.getText().toString();
+                            newObjectSale.setValue(valueText.getText().toString());
                             break;
                         case 3:
-                            newValue = valueText.getText().toString();
+                            newObjectSale.setMessage(messageText.getText().toString());
                             break;
                         case 4:
-                            newValue = messageText.getText().toString();
+                            newObjectSale.setPercentage(percentText.getText().toString());
                             break;
                         default:
-                            newValue = "-";
                             break;
                     }
-
-                    if (newStack.size() == 5) {
-                        newStack.pop();
-                        newStack.push(newValue);
-                    } else {
-                        newStack.push(newValue);
-                    }
-                    listOfValues.set(y, newStack);
                 }
+
+                listOfObjectSales.removeLast();
+                listOfObjectSales.push(newObjectSale);
+
                 showTableView();
             }
         });
@@ -88,6 +95,14 @@ public class MainActivity extends Activity {
                 industryText.setText("");
                 valueText.setText("");
                 messageText.setText("");
+                percentText.setText("");
+            }
+        });
+
+        submitRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executeRest();
             }
         });
 
@@ -111,15 +126,51 @@ public class MainActivity extends Activity {
 
     private void showTableView() {
         Intent intent = new Intent(this, TableViewActivity.class);
-        ListOfStringValues serializedList = new ListOfStringValues(listOfValues);
-        intent.putExtra(LIST_OF_VALUES, serializedList);
+        ListOfObjectSaleWrapper serializableObject = new ListOfObjectSaleWrapper(listOfObjectSales);
+        intent.putExtra(OBJECT_SALE_KEY, serializableObject);
         startActivity(intent);
     }
 
-    private void initListOfStringValues() {
-        for (int x = 0; x < 5; ++x) {
-            Stack<String> initStack = new Stack<String>();
-            listOfValues.add(initStack);
+    private void initLinkedList() {
+        for (int i = 0; i < 6; ++i) {
+            listOfObjectSales.add(new ObjectSale());
         }
     }
+
+    private void executeRest() {
+        BackgroundTask task = new BackgroundTask();
+        task.execute();
+    }
+
+    private class BackgroundTask extends AsyncTask<Void, Void,
+            CuratorPOJO> {
+        RestAdapter restAdapter;
+
+        @Override
+        protected void onPreExecute() {
+            restAdapter = new RestAdapter.Builder()
+                    .setEndpoint(API_URL)
+                    .build();
+        }
+
+        @Override
+        protected CuratorPOJO doInBackground(Void... params) {
+            IApiMethods methods = restAdapter.create(IApiMethods.class);
+            CuratorPOJO curators = methods.getCurators(API_KEY);
+
+            return curators;
+        }
+
+        @Override
+        protected void onPostExecute(CuratorPOJO curators) {
+            restResponse.setText(curators.title + "\n\n");
+            for (CuratorPOJO.Dataset dataset : curators.dataset) {
+                restResponse.setText(restResponse.getText() + dataset.curator_title +
+                        " - " + dataset.curator_tagline + "\n");
+            }
+        }
+    }
+
 }
+
+

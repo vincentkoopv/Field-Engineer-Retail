@@ -8,21 +8,22 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class ListViewAdapter extends BaseAdapter {
 
     Context context;
-    ArrayList<Stack<String>> listOfValues = new ArrayList<Stack<String>>();
+    private LinkedList<ObjectSale> listOfObjectSales = new LinkedList<ObjectSale>();
 
     @Override
     public int getCount() {
-        return listOfValues.size();
+        return listOfObjectSales.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listOfValues.get(position);
+        return listOfObjectSales.get(position);
     }
 
     @Override
@@ -50,6 +51,9 @@ public class ListViewAdapter extends BaseAdapter {
             case 4:
                 titleText.setText(R.string.message);
                 break;
+            case 5:
+                titleText.setText(R.string.percentage);
+                break;
             default:
                 titleText.setText(" ");
                 break;
@@ -62,7 +66,6 @@ public class ListViewAdapter extends BaseAdapter {
         TextView value4 = (TextView) convertView.findViewById(R.id.value4);
         TextView value5 = (TextView) convertView.findViewById(R.id.value5);
 
-        //Setup headers else setup values
         if (position == 0) {
             value1.setText(R.string.first_value);
             value2.setText(R.string.second_value);
@@ -70,31 +73,50 @@ public class ListViewAdapter extends BaseAdapter {
             value4.setText(R.string.fourth_value);
             value5.setText(R.string.fifth_value);
         } else {
-            for (int x = 4; x >= 0; --x) {
-                String stringValue = getStringInStack(position, x);
-
-                switch (x) {
-                    case 0:
-                        value1.setText(stringValue);
-                        break;
+            for (int columns = 0; columns < getCount(); ++columns) {
+                ObjectSale objectSale = listOfObjectSales.get(columns);
+                String value = " ";
+                switch(position){
                     case 1:
-                        value2.setText(stringValue);
+                        value = objectSale.getName();
                         break;
                     case 2:
-                        value3.setText(stringValue);
+                        value = objectSale.getIndustry();
                         break;
                     case 3:
-                        value4.setText(stringValue);
+                        value = objectSale.getValue();
                         break;
                     case 4:
-                        value5.setText(stringValue);
+                        value = objectSale.getMessage();
+                        break;
+                    case 5:
+                        value = objectSale.getPercentage();
+                        break;
+                    default:
+                        break;
+                }
+
+                switch(columns){
+                    case 0:
+                        value1.setText(value);
+                        break;
+                    case 1:
+                        value2.setText(value);
+                        break;
+                    case 2:
+                        value3.setText(value);
+                        break;
+                    case 3:
+                        value4.setText(value);
+                        break;
+                    case 4:
+                        value5.setText(value);
                         break;
                     default:
                         break;
                 }
             }
         }
-
 
         return convertView;
     }
@@ -103,17 +125,8 @@ public class ListViewAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    private String getStringInStack(int listPosition, int stackPosition) {
-
-        if (listOfValues.get(listPosition).size() > stackPosition && listOfValues.get(listPosition).get(stackPosition) != null) {
-            return listOfValues.get(listPosition).get(stackPosition);
-        }
-
-        return " ";
-    }
-
-    public void addOrUpdateList(ArrayList<Stack<String>> newStringStack) {
-        listOfValues = newStringStack;
+    public void addOrUpdateList(LinkedList<ObjectSale> newListOfObjectSales) {
+        listOfObjectSales = newListOfObjectSales;
     }
 
 }

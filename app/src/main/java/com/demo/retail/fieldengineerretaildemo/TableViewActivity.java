@@ -11,27 +11,29 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Stack;
 
-import static com.demo.retail.fieldengineerretaildemo.MainActivity.LIST_OF_VALUES;
+import static com.demo.retail.fieldengineerretaildemo.MainActivity.OBJECT_SALE_KEY;
 
 public class TableViewActivity extends Activity {
     private ListView listView;
+    private Button backButton;
 
     private ArrayList<Stack<String>> listOfValues = new ArrayList<Stack<String>>();
 
-    private Button backButton;
+    private LinkedList<ObjectSale> listOfObjectSales = new LinkedList<ObjectSale>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table_view);
-        ListOfStringValues serializedList = (ListOfStringValues) getIntent().getExtras().get(LIST_OF_VALUES);
-        listOfValues = serializedList.getListOfValues();
+        listOfObjectSales = ((ListOfObjectSaleWrapper) getIntent().getExtras().get(OBJECT_SALE_KEY)).getListOfObjectSales();
 
         listView = (ListView) findViewById(R.id.listview);
         ListViewAdapter listViewAdapter = new ListViewAdapter(this);
-        listViewAdapter.addOrUpdateList(listOfValues);
+        listViewAdapter.addOrUpdateList(listOfObjectSales);
         listView.setAdapter(listViewAdapter);
 
         backButton = (Button) findViewById(R.id.back_button);
@@ -39,8 +41,8 @@ public class TableViewActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplication(), MainActivity.class);
-                ListOfStringValues serializedList = new ListOfStringValues(listOfValues);
-                intent.putExtra(LIST_OF_VALUES, serializedList);
+                ListOfObjectSaleWrapper serializableObject = new ListOfObjectSaleWrapper(listOfObjectSales);
+                intent.putExtra(OBJECT_SALE_KEY, serializableObject);
                 startActivity(intent);
             }
         });
