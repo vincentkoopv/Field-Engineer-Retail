@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Field Engineer Retail Demo</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="table_tittle">Table of Values</string>
+    <string name="name">Name</string>
+    <string name="industry">Industry</string>
+    <string name="value">Value</string>
+    <string name="message">Message</string>
+    <string name="submit_button">Submit</string>
+    <string name="clear_button">Clear</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_table_view">TableViewActivity</string>
+
+    <string name="first_value">1st Value</string>
+    <string name="second_value">2nd Value</string>
+    <string name="third_value">3rd Value</string>
+    <string name="fourth_value">4th Value</string>
+    <string name="fifth_value">5th Value</string>
+
+
+</resources>
