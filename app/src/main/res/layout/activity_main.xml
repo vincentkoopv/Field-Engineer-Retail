@@ -51,17 +51,4 @@
         android:layout_marginBottom="50dp"
         android:text="@string/clear_button" />
 
-    <TextView
-        android:id="@+id/rest_response"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/restful_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rest_button" />
-
-
-
 </LinearLayout>

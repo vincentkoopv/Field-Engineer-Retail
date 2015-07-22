@@ -18,18 +18,37 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
 
+import static com.demo.retail.fieldengineerretaildemo.MainActivity.CURATOR_POJO_KEY;
 import static com.demo.retail.fieldengineerretaildemo.MainActivity.OBJECT_SALE_KEY;
 
 public class TableViewActivity extends Activity {
     private ListView listView;
     private Button backButton;
+    private TextView restResponse;
+    private CuratorPOJO curatorPOJO;
     private LinkedList<ObjectSale> listOfObjectSales = new LinkedList<ObjectSale>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table_view);
-        listOfObjectSales = ((ListOfObjectSaleWrapper) getIntent().getExtras().get(OBJECT_SALE_KEY)).getListOfObjectSales();
+
+        restResponse = (TextView) findViewById(R.id.rest_response);
+        if(getIntent().hasExtra(CURATOR_POJO_KEY)){
+            curatorPOJO = (CuratorPOJO) getIntent().getExtras().get(CURATOR_POJO_KEY);
+            restResponse.setText(curatorPOJO.title + "\n\n");
+            for (CuratorPOJO.Dataset dataset : curatorPOJO.dataset) {
+                restResponse.setText(restResponse.getText() + dataset.curator_title +
+                        " - " + dataset.curator_tagline + "\n");
+            }
+        }
+        else{
+            restResponse.setText(R.string.rest_fail);
+        }
+
+        if(getIntent().hasExtra(OBJECT_SALE_KEY)){
+            listOfObjectSales = ((ListOfObjectSaleWrapper) getIntent().getExtras().get(OBJECT_SALE_KEY)).getListOfObjectSales();
+        }
 
         listView = (ListView) findViewById(R.id.listview);
         ListViewAdapter listViewAdapter = new ListViewAdapter(this);
@@ -48,6 +67,7 @@ public class TableViewActivity extends Activity {
         });
 
         initHeaders();
+
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -64,7 +84,6 @@ public class TableViewActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_table_view, menu);
         return true;
     }
@@ -73,7 +92,6 @@ public class TableViewActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
                 this.finish();
                 return true;
             default:

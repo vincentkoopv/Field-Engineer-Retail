@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
     private static final String API_KEY = "60BLHNQCAOUFPIBZ";
 
     public static final String OBJECT_SALE_KEY = "OBJECT_SALE_KEY";
+    public static final String CURATOR_POJO_KEY = "CURATOR_POJO_KEY";
 
     private TextView nameText;
     private TextView industryText;
@@ -27,10 +28,9 @@ public class MainActivity extends Activity {
     private TextView messageText;
     private TextView percentText;
 
-    private TextView restResponse;
-    private Button submitRequest;
     private Button submitButton;
     private Button clearButton;
+    private CuratorPOJO curatorPOJO;
     private LinkedList<ObjectSale> listOfObjectSales = new LinkedList<ObjectSale>();
 
     @Override
@@ -45,8 +45,6 @@ public class MainActivity extends Activity {
         percentText = (TextView) findViewById(R.id.percent_text);
         submitButton = (Button) findViewById(R.id.submit_button);
         clearButton = (Button) findViewById(R.id.clear_button);
-        restResponse = (TextView) findViewById(R.id.rest_response);
-        submitRequest = (Button) findViewById(R.id.restful_button);
 
         if (getIntent().hasExtra(OBJECT_SALE_KEY)) {
             listOfObjectSales = ((ListOfObjectSaleWrapper) getIntent().getExtras().get(OBJECT_SALE_KEY)).getListOfObjectSales();
@@ -82,7 +80,7 @@ public class MainActivity extends Activity {
                 listOfObjectSales.removeLast();
                 listOfObjectSales.push(newObjectSale);
 
-                showTableView();
+                submitData();
             }
         });
 
@@ -96,14 +94,6 @@ public class MainActivity extends Activity {
                 percentText.setText("");
             }
         });
-
-        submitRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                executeRest();
-            }
-        });
-
     }
 
     @Override
@@ -122,10 +112,15 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showTableView() {
+    private void submitData() {
+        executeRest();
+    }
+
+    private void goToTableViewActivity() {
         Intent intent = new Intent(this, TableViewActivity.class);
         ListOfObjectSaleWrapper serializableObject = new ListOfObjectSaleWrapper(listOfObjectSales);
         intent.putExtra(OBJECT_SALE_KEY, serializableObject);
+        intent.putExtra(CURATOR_POJO_KEY, curatorPOJO);
         startActivity(intent);
     }
 
@@ -161,11 +156,8 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(CuratorPOJO curators) {
-            restResponse.setText(curators.title + "\n\n");
-            for (CuratorPOJO.Dataset dataset : curators.dataset) {
-                restResponse.setText(restResponse.getText() + dataset.curator_title +
-                        " - " + dataset.curator_tagline + "\n");
-            }
+            curatorPOJO = curators;
+            goToTableViewActivity();
         }
     }
 }

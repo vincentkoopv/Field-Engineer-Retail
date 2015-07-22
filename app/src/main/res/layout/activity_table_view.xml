@@ -74,6 +74,12 @@
         android:id="@+id/back_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back" />
+        android:text="Back"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/rest_response"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

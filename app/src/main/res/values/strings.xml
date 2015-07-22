@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Field Engineer Retail Demo</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="table_tittle">Table of Values</string>
     <string name="name">Name</string>
     <string name="industry">Industry</string>
@@ -10,8 +8,8 @@
     <string name="percentage">Percentage to Date</string>
     <string name="submit_button">Submit</string>
     <string name="clear_button">Clear</string>
-    <string name="rest_button">REST</string>
     <string name="action_settings">Settings</string>
+    <string name="rest_fail">REST CALL FAIL</string>
     <string name="title_activity_table_view">TableViewActivity</string>
 
     <string name="first_value">1st Value</string>
