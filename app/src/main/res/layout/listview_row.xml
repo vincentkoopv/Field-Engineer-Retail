@@ -9,6 +9,7 @@
         android:layout_width="60dp"
         android:textSize="10dp"
         android:layout_height="match_parent"
+        android:textColor="#000"
         android:padding="2dp"/>
 
     <View
@@ -21,6 +22,7 @@
         android:id="@+id/value1"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:textColor="#000"
         android:padding="2dp"/>
 
     <View
@@ -33,6 +35,7 @@
         android:id="@+id/value2"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:textColor="#000"
         android:padding="2dp"/>
 
     <View
@@ -45,6 +48,7 @@
         android:id="@+id/value3"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:textColor="#000"
         android:padding="2dp"/>
 
     <View
@@ -57,6 +61,7 @@
         android:id="@+id/value4"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:textColor="#000"
         android:padding="2dp"/>
 
     <View
@@ -69,6 +74,7 @@
         android:id="@+id/value5"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:textColor="#000"
         android:padding="2dp"/>
 
     <View

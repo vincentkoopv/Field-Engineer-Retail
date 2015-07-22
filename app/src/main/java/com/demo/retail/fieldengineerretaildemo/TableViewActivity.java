@@ -15,6 +15,8 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -28,25 +30,37 @@ public class TableViewActivity extends Activity {
     private CuratorPOJO curatorPOJO;
     private LinkedList<ObjectSale> listOfObjectSales = new LinkedList<ObjectSale>();
 
+    private TextView nameHeader;
+    private TextView industryHeader;
+    private TextView valueHeader;
+    private TextView messageHeader;
+    private TextView percentageHeader;
+
+    private Boolean isDescending = true;
+
+    private Boolean isNameDescending = true;
+    private Boolean isIndustryDescending = true;
+    private Boolean isValueDescending = true;
+    private Boolean isMessageDescending = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table_view);
 
         restResponse = (TextView) findViewById(R.id.rest_response);
-        if(getIntent().hasExtra(CURATOR_POJO_KEY)){
+        if (getIntent().hasExtra(CURATOR_POJO_KEY)) {
             curatorPOJO = (CuratorPOJO) getIntent().getExtras().get(CURATOR_POJO_KEY);
             restResponse.setText(curatorPOJO.title + "\n\n");
             for (CuratorPOJO.Dataset dataset : curatorPOJO.dataset) {
                 restResponse.setText(restResponse.getText() + dataset.curator_title +
                         " - " + dataset.curator_tagline + "\n");
             }
-        }
-        else{
+        } else {
             restResponse.setText(R.string.rest_fail);
         }
 
-        if(getIntent().hasExtra(OBJECT_SALE_KEY)){
+        if (getIntent().hasExtra(OBJECT_SALE_KEY)) {
             listOfObjectSales = ((ListOfObjectSaleWrapper) getIntent().getExtras().get(OBJECT_SALE_KEY)).getListOfObjectSales();
         }
 
@@ -75,11 +89,107 @@ public class TableViewActivity extends Activity {
     }
 
     private void initHeaders() {
-        ((TextView) findViewById(R.id.header1)).setText(R.string.name);
-        ((TextView) findViewById(R.id.header2)).setText(R.string.industry);
-        ((TextView) findViewById(R.id.header3)).setText(R.string.value);
-        ((TextView) findViewById(R.id.header4)).setText(R.string.message);
-        ((TextView) findViewById(R.id.header5)).setText(R.string.percentage);
+        nameHeader = ((TextView) findViewById(R.id.header1));
+        industryHeader = ((TextView) findViewById(R.id.header2));
+        valueHeader = ((TextView) findViewById(R.id.header3));
+        messageHeader = ((TextView) findViewById(R.id.header4));
+        percentageHeader = ((TextView) findViewById(R.id.header5));
+        labelHeaders();
+
+        nameHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkedList<ObjectSale> sortedListOfObjectSales = listOfObjectSales;
+                labelHeaders();
+                isNameDescending = !isNameDescending;
+                if (isNameDescending) {
+                    nameHeader.setText(getString(R.string.name) + "(D)");
+                } else {
+                    nameHeader.setText(getString(R.string.name) + "(A)");
+                }
+                Collections.sort(sortedListOfObjectSales, new sortObjectSaleString(0, isNameDescending));
+
+                ListViewAdapter listViewAdapter = new ListViewAdapter(getApplicationContext());
+                listViewAdapter.addOrUpdateList(listOfObjectSales);
+                listView.setAdapter(listViewAdapter);
+                listView.invalidate();
+            }
+        });
+
+        industryHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkedList<ObjectSale> sortedListOfObjectSales = listOfObjectSales;
+                labelHeaders();
+                isIndustryDescending = !isIndustryDescending;
+                if (isIndustryDescending) {
+                    industryHeader.setText(getString(R.string.industry) + "(D)");
+                } else {
+                    industryHeader.setText(getString(R.string.industry) + "(A)");
+                }
+                Collections.sort(sortedListOfObjectSales, new sortObjectSaleString(1, isIndustryDescending));
+
+                ListViewAdapter listViewAdapter = new ListViewAdapter(getApplicationContext());
+                listViewAdapter.addOrUpdateList(listOfObjectSales);
+                listView.setAdapter(listViewAdapter);
+                listView.invalidate();
+            }
+        });
+
+        valueHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkedList<ObjectSale> sortedListOfObjectSales = listOfObjectSales;
+                labelHeaders();
+                isValueDescending = !isValueDescending;
+                if (isValueDescending) {
+
+                    valueHeader.setText(getString(R.string.value) + "(D)");
+                } else {
+                    valueHeader.setText(getString(R.string.value) + "(A)");
+                }
+                Collections.sort(sortedListOfObjectSales, new sortObjectSaleString(2, isValueDescending));
+
+                ListViewAdapter listViewAdapter = new ListViewAdapter(getApplicationContext());
+                listViewAdapter.addOrUpdateList(listOfObjectSales);
+                listView.setAdapter(listViewAdapter);
+                listView.invalidate();
+            }
+        });
+
+        messageHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkedList<ObjectSale> sortedListOfObjectSales = listOfObjectSales;
+                labelHeaders();
+                isMessageDescending = !isMessageDescending;
+                if (isMessageDescending) {
+                    messageHeader.setText(getString(R.string.message) + "(D)");
+                } else {
+                    messageHeader.setText(getString(R.string.message) + "(A)");
+                }
+                Collections.sort(sortedListOfObjectSales, new sortObjectSaleString(3, isMessageDescending));
+
+                ListViewAdapter listViewAdapter = new ListViewAdapter(getApplicationContext());
+                listViewAdapter.addOrUpdateList(listOfObjectSales);
+                listView.setAdapter(listViewAdapter);
+                listView.invalidate();
+            }
+        });
+
+        percentageHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+    }
+
+    private void labelHeaders(){
+        nameHeader.setText(R.string.name);
+        industryHeader.setText(R.string.industry);
+        valueHeader.setText(R.string.value);
+        messageHeader.setText(R.string.message);
+        percentageHeader.setText(R.string.percentage);
     }
 
     @Override
@@ -100,4 +210,45 @@ public class TableViewActivity extends Activity {
     }
 
 
+    class sortObjectSaleString implements Comparator<ObjectSale> {
+        private int typeToSort = -1;
+        private boolean isDescending = true;
+
+        public sortObjectSaleString(int typeToSort, boolean isDescending) {
+            this.typeToSort = typeToSort;
+            this.isDescending = isDescending;
+        }
+
+        @Override
+        public int compare(ObjectSale lhs, ObjectSale rhs) {
+            if (lhs.getName().trim().isEmpty()) {
+                return 1;
+            }
+            if (isDescending) {
+                if (typeToSort == 0) {
+                    return lhs.getName().compareToIgnoreCase(rhs.getName());
+                } else if (typeToSort == 1) {
+                    return lhs.getIndustry().compareToIgnoreCase(rhs.getIndustry());
+                } else if (typeToSort == 2) {
+                    return lhs.getValue().compareToIgnoreCase(rhs.getValue());
+                } else if (typeToSort == 3) {
+                    return lhs.getMessage().compareToIgnoreCase(rhs.getMessage());
+                } else {
+                    return 0;
+                }
+            } else {
+                if (typeToSort == 0) {
+                    return -lhs.getName().compareToIgnoreCase(rhs.getName());
+                } else if (typeToSort == 1) {
+                    return -lhs.getIndustry().compareToIgnoreCase(rhs.getIndustry());
+                } else if (typeToSort == 2) {
+                    return -lhs.getValue().compareToIgnoreCase(rhs.getValue());
+                } else if (typeToSort == 3) {
+                    return -lhs.getMessage().compareToIgnoreCase(rhs.getMessage());
+                } else {
+                    return 0;
+                }
+            }
+        }
+    }
 }
