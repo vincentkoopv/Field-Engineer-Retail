@@ -8,7 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,11 +23,7 @@ import static com.demo.retail.fieldengineerretaildemo.MainActivity.OBJECT_SALE_K
 public class TableViewActivity extends Activity {
     private ListView listView;
     private Button backButton;
-
-    private ArrayList<Stack<String>> listOfValues = new ArrayList<Stack<String>>();
-
     private LinkedList<ObjectSale> listOfObjectSales = new LinkedList<ObjectSale>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,19 @@ public class TableViewActivity extends Activity {
             }
         });
 
+        initHeaders();
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
+    private void initHeaders() {
+        ((TextView) findViewById(R.id.header1)).setText(R.string.name);
+        ((TextView) findViewById(R.id.header2)).setText(R.string.industry);
+        ((TextView) findViewById(R.id.header3)).setText(R.string.value);
+        ((TextView) findViewById(R.id.header4)).setText(R.string.message);
+        ((TextView) findViewById(R.id.header5)).setText(R.string.percentage);
     }
 
     @Override

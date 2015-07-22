@@ -36,26 +36,26 @@ public class ListViewAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         convertView = inflater.inflate(R.layout.listview_row, null);
-        TextView titleText = (TextView) convertView.findViewById(R.id.title);
+        TextView nthValueTitleText = (TextView) convertView.findViewById(R.id.title);
 
         switch (position) {
+            case 0:
+                nthValueTitleText.setText(R.string.first_value);
+                break;
             case 1:
-                titleText.setText(R.string.name);
+                nthValueTitleText.setText(R.string.second_value);
                 break;
             case 2:
-                titleText.setText(R.string.industry);
+                nthValueTitleText.setText(R.string.third_value);
                 break;
             case 3:
-                titleText.setText(R.string.value);
+                nthValueTitleText.setText(R.string.fourth_value);
                 break;
             case 4:
-                titleText.setText(R.string.message);
-                break;
-            case 5:
-                titleText.setText(R.string.percentage);
+                nthValueTitleText.setText(R.string.fifth_value);
                 break;
             default:
-                titleText.setText(" ");
+                nthValueTitleText.setText(" ");
                 break;
         }
 
@@ -66,57 +66,29 @@ public class ListViewAdapter extends BaseAdapter {
         TextView value4 = (TextView) convertView.findViewById(R.id.value4);
         TextView value5 = (TextView) convertView.findViewById(R.id.value5);
 
-        if (position == 0) {
-            value1.setText(R.string.first_value);
-            value2.setText(R.string.second_value);
-            value3.setText(R.string.third_value);
-            value4.setText(R.string.fourth_value);
-            value5.setText(R.string.fifth_value);
-        } else {
-            for (int columns = 0; columns < getCount(); ++columns) {
-                ObjectSale objectSale = listOfObjectSales.get(columns);
-                String value = " ";
-                switch(position){
-                    case 1:
-                        value = objectSale.getName();
-                        break;
-                    case 2:
-                        value = objectSale.getIndustry();
-                        break;
-                    case 3:
-                        value = objectSale.getValue();
-                        break;
-                    case 4:
-                        value = objectSale.getMessage();
-                        break;
-                    case 5:
-                        value = objectSale.getPercentage();
-                        break;
-                    default:
-                        break;
-                }
-
-                switch(columns){
-                    case 0:
-                        value1.setText(value);
-                        break;
-                    case 1:
-                        value2.setText(value);
-                        break;
-                    case 2:
-                        value3.setText(value);
-                        break;
-                    case 3:
-                        value4.setText(value);
-                        break;
-                    case 4:
-                        value5.setText(value);
-                        break;
-                    default:
-                        break;
-                }
+        ObjectSale objectSale = listOfObjectSales.get(position);
+        for (int columns = 0; columns < getCount(); ++columns) {
+            switch (columns) {
+                case 0:
+                    value1.setText(objectSale.getName());
+                    break;
+                case 1:
+                    value2.setText(objectSale.getIndustry());
+                    break;
+                case 2:
+                    value3.setText(objectSale.getValue());
+                    break;
+                case 3:
+                    value4.setText(objectSale.getMessage());
+                    break;
+                case 4:
+                    value5.setText(objectSale.getPercentage());
+                    break;
+                default:
+                    break;
             }
         }
+
 
         return convertView;
     }

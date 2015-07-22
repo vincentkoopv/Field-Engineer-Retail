@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.LinkedList;
@@ -18,7 +17,7 @@ import retrofit.RestAdapter;
 public class MainActivity extends Activity {
 
     private static final String API_URL = "http://freemusicarchive.org/api";
-    private static final String API_KEY = "-------";
+    private static final String API_KEY = "60BLHNQCAOUFPIBZ";
 
     public static final String OBJECT_SALE_KEY = "OBJECT_SALE_KEY";
 
@@ -80,7 +79,6 @@ public class MainActivity extends Activity {
                             break;
                     }
                 }
-
                 listOfObjectSales.removeLast();
                 listOfObjectSales.push(newObjectSale);
 
@@ -132,7 +130,7 @@ public class MainActivity extends Activity {
     }
 
     private void initLinkedList() {
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 5; ++i) {
             listOfObjectSales.add(new ObjectSale());
         }
     }
@@ -170,7 +168,6 @@ public class MainActivity extends Activity {
             }
         }
     }
-
 }
 
 
