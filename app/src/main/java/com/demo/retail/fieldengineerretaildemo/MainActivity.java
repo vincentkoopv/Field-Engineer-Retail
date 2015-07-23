@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
                             newObjectSale.setMessage(messageText.getText().toString());
                             break;
                         case 4:
-                            newObjectSale.setPercentage(percentText.getText().toString());
+                            newObjectSale.setPercentage(Integer.parseInt(percentText.getText().toString()));
                             break;
                         default:
                             break;

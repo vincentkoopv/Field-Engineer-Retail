@@ -37,12 +37,11 @@ public class TableViewActivity extends Activity {
     private TextView messageHeader;
     private TextView percentageHeader;
 
-    private Boolean isDescending = true;
-
     private Boolean isNameDescending = true;
     private Boolean isIndustryDescending = true;
     private Boolean isValueDescending = true;
     private Boolean isMessageDescending = true;
+    private Boolean isPercentDescending = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,11 +181,25 @@ public class TableViewActivity extends Activity {
         percentageHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LinkedList<ObjectSale> sortedListOfObjectSales = listOfObjectSales;
+                labelHeaders();
+                isPercentDescending = !isPercentDescending;
+                if (isPercentDescending) {
+                    percentageHeader.setText(getString(R.string.message) + "(D)");
+                } else {
+                    percentageHeader.setText(getString(R.string.message) + "(A)");
+                }
+                Collections.sort(sortedListOfObjectSales, new sortObjectSaleString(4, isPercentDescending));
+
+                ListViewAdapter listViewAdapter = new ListViewAdapter(getApplicationContext());
+                listViewAdapter.addOrUpdateList(listOfObjectSales);
+                listView.setAdapter(listViewAdapter);
+                listView.invalidate();
             }
         });
     }
 
-    private void labelHeaders(){
+    private void labelHeaders() {
         nameHeader.setText(R.string.name);
         industryHeader.setText(R.string.industry);
         valueHeader.setText(R.string.value);
@@ -235,6 +248,12 @@ public class TableViewActivity extends Activity {
                     return lhs.getValue().compareToIgnoreCase(rhs.getValue());
                 } else if (typeToSort == 3) {
                     return lhs.getMessage().compareToIgnoreCase(rhs.getMessage());
+                } else if (typeToSort == 4) {
+                    if (lhs.getPercentage() > rhs.getPercentage()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
                 } else {
                     return 0;
                 }
@@ -247,6 +266,12 @@ public class TableViewActivity extends Activity {
                     return -lhs.getValue().compareToIgnoreCase(rhs.getValue());
                 } else if (typeToSort == 3) {
                     return -lhs.getMessage().compareToIgnoreCase(rhs.getMessage());
+                } else if (typeToSort == 4) {
+                    if (lhs.getPercentage() < rhs.getPercentage()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
                 } else {
                     return 0;
                 }

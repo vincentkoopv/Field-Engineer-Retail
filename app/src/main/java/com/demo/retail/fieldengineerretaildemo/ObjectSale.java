@@ -8,7 +8,7 @@ public class ObjectSale implements Serializable {
     private String industry = "";
     private String value = "";
     private String message = "";
-    private String percentage = "";
+    private Integer percentage = null;
 
 
     public ObjectSale() {
@@ -30,8 +30,8 @@ public class ObjectSale implements Serializable {
         this.message = message;
     }
 
-    public void setPercentage(String percentage) {
-        this.percentage = percentage + "%";
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
     }
 
     public String getName() {
@@ -50,7 +50,7 @@ public class ObjectSale implements Serializable {
         return message;
     }
 
-    public String getPercentage() {
+    public Integer getPercentage() {
         return percentage;
     }
 

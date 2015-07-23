@@ -82,7 +82,12 @@ public class ListViewAdapter extends BaseAdapter {
                     value4.setText(objectSale.getMessage());
                     break;
                 case 4:
-                    value5.setText(objectSale.getPercentage());
+                    if(objectSale.getPercentage() == null){
+                        value5.setText(" ");
+                    }
+                    else {
+                        value5.setText(String.valueOf(objectSale.getPercentage()) + "%");
+                    }
                     break;
                 default:
                     break;
