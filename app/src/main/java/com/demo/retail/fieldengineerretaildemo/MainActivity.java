@@ -1,7 +1,9 @@
 package com.demo.retail.fieldengineerretaildemo;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -94,6 +96,11 @@ public class MainActivity extends Activity {
                 percentText.setText("");
             }
         });
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.pivotal_green)));
+        }
     }
 
     @Override
